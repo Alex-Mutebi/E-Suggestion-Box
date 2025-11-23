@@ -1,0 +1,194 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>School Suggestion Box</title>
+  <style>
+    /* --- Paste of your style (kept concise here) --- */
+    body {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+      min-height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem 1rem;
+      position: relative;
+      color: #111;
+    }
+    .container { width:100%; max-width:680px; background:#fff; padding:0; box-shadow:0 30px 90px rgba(0,0,0,0.8); overflow:hidden; }
+    .accent-bar { height:8px; background:linear-gradient(90deg,#000 0%,#404040 50%,#000 100%); }
+    .container-inner { padding:3.5rem 3rem; background:#fff; }
+    .header h1 { font-size:2.5rem; font-weight:800; color:#000; margin:0 0 .75rem 0; }
+    .header p { color:#666; margin:0; }
+    .form-group { margin-bottom:1.5rem; }
+    label { display:block; font-size:.8rem; font-weight:700; color:#000; margin-bottom:.5rem; }
+    input[type="text"], select, textarea { width:100%; padding:1rem 1.25rem; border:2px solid #000; font-size:.95rem; }
+    textarea { min-height:140px; }
+    .submit-btn { width:100%; padding:1.25rem; background:#000; color:#fff; border:3px solid #000; font-weight:800; cursor:pointer; text-transform:uppercase; }
+    .success-message { display:none; background:#000; color:#fff; padding:1.5rem; margin-top:1rem; }
+    .success-message.show { display:block; }
+    @media (max-width:640px){ .container-inner{padding:2rem} .header h1{font-size:2rem} }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="accent-bar"></div>
+    <div class="container-inner">
+      <div class="header">
+        <h1 id="form-title">School Suggestion Box</h1>
+        <p id="form-subtitle">Your voice matters! Share your ideas to help improve our school community.</p>
+      </div>
+
+      <!-- Form: sends to FormSubmit (your email) -->
+      <form id="suggestion-form" action="https://formsubmit.co/alexmutebi118@gmail.com" method="POST">
+        <!-- Hidden config for FormSubmit -->
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_subject" value="New School Suggestion Submitted">
+        <input type="hidden" name="_autoresponse" value="Thank you for your suggestion! We have received it.">
+       
+        <!-- honeypot -->
+        <input type="text" name="_honey" style="display:none">
+
+        <!-- a nicer email body (FormSubmit will include this HTML in the email) -->
+        <input type="hidden" name="_body" value="&lt;h2&gt;New suggestion received&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;Submitter type:&lt;/strong&gt; {{submitter_type}} &lt;br&gt;&lt;strong&gt;Grade level:&lt;/strong&gt; {{grade_level}} &lt;br&gt;&lt;strong&gt;Category:&lt;/strong&gt; {{category}} &lt;br&gt;&lt;strong&gt;Subject:&lt;/strong&gt; {{subject}} &lt;br&gt;&lt;strong&gt;Suggestion:&lt;/strong&gt;&lt;br&gt; {{suggestion}} &lt;/p&gt;">
+
+        <div class="form-group">
+          <label for="submitter-type">I am a <span class="required">*</span></label>
+          <select id="submitter-type" name="submitter_type" required>
+            <option value="">Select an option</option>
+            <option value="student">Student</option>
+            <option value="parent">Parent/Guardian</option>
+            <option value="teacher">Teacher</option>
+            <option value="staff">Staff Member</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="grade-group" style="display:none;">
+          <label for="grade-level">Grade Level <span class="required">*</span></label>
+          <select id="grade-level" name="grade_level">
+            <option value="">Select grade</option>
+            <option value="k">Kindergarten</option>
+            <option value="1">1st Grade</option>
+            <option value="2">2nd Grade</option>
+            <option value="3">3rd Grade</option>
+            <option value="4">4th Grade</option>
+            <option value="5">5th Grade</option>
+            <option value="6">6th Grade</option>
+            <option value="7">7th Grade</option>
+            <option value="8">8th Grade</option>
+            <option value="9">9th Grade</option>
+            <option value="10">10th Grade</option>
+            <option value="11">11th Grade</option>
+            <option value="12">12th Grade</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="category">Suggestion Category <span class="required">*</span></label>
+          <select id="category" name="category" required>
+            <option value="">Select a category</option>
+            <option value="academics">Academics &amp; Curriculum</option>
+            <option value="facilities">Facilities &amp; Campus</option>
+            <option value="extracurricular">Clubs &amp; Activities</option>
+            <option value="cafeteria">Cafeteria &amp; Food Services</option>
+            <option value="sports">Sports &amp; Athletics</option>
+            <option value="technology">Technology &amp; Resources</option>
+            <option value="events">School Events</option>
+            <option value="safety">Safety &amp; Wellbeing</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="subject">Subject Line <span class="required">*</span></label>
+          <input type="text" id="subject" name="subject" placeholder="Brief summary of your suggestion" required maxlength="100">
+        </div>
+
+        <div class="form-group">
+          <label for="suggestion">Your Suggestion <span class="required">*</span></label>
+          <textarea id="suggestion" name="suggestion" placeholder="Please share your ideas, feedback, or suggestions in detail..." required maxlength="1000"></textarea>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submit-btn"><span id="submit-text">Submit Suggestion</span></button>
+      </form>
+
+      <div class="success-message" id="success-message">✓ <span id="success-text">Thank you! Your suggestion has been submitted successfully.</span></div>
+    </div>
+  </div>
+
+  <script>
+    // show/hide grade select for student type
+    const submitterTypeSelect = document.getElementById('submitter-type');
+    const gradeGroup = document.getElementById('grade-group');
+    const gradeSelect = document.getElementById('grade-level');
+
+    submitterTypeSelect.addEventListener('change', (e) => {
+      if (e.target.value === 'student') {
+        gradeGroup.style.display = 'block';
+        gradeSelect.required = true;
+      } else {
+        gradeGroup.style.display = 'none';
+        gradeSelect.required = false;
+        gradeSelect.value = '';
+      }
+    });
+
+    // visual success message (optional - FormSubmit will redirect to _next)
+    const form = document.getElementById('suggestion-form');
+    const submitBtn = document.getElementById('submit-btn');
+    const successMessage = document.getElementById('success-message');
+
+    form.addEventListener('submit', function(e) {
+      // keep default behavior so FormSubmit sends email and handles redirect
+      submitBtn.disabled = true;
+      document.getElementById('submit-text').textContent = 'Submitting...';
+      // the Google Sheets logging (below) will run but won't block the form submission
+    });
+  </script>
+
+  <script>
+    // --- Google Sheets logging via your Apps Script Web App URL ---
+    // The script will attempt to send a copy of the submission to the provided Google Apps Script URL.
+    (function(){
+      const form = document.getElementById('suggestion-form');
+      if (!form) return;
+      form.addEventListener('submit', function() {
+        try {
+          const data = {
+            submitter_type: document.getElementById('submitter-type')?.value || '',
+            grade_level: document.getElementById('grade-level')?.value || 'N/A',
+            category: document.getElementById('category')?.value || '',
+            subject: document.getElementById('subject')?.value || '',
+            suggestion: document.getElementById('suggestion')?.value || ''
+          };
+
+          const gsUrl = "https://script.google.com/macros/s/AKfycbwQDiWsnN5APQjqvMDThwe1UwQ37oj7aqP1e-OvJ_1I1m-7nrIzcu7eWKOpnRVf-k-y/exec";
+
+          // Try navigator.sendBeacon first (reliable during page unload)
+          if (navigator.sendBeacon) {
+            // sendBeacon expects a Blob, ArrayBuffer, FormData or string - pass JSON string
+            navigator.sendBeacon(gsUrl, JSON.stringify(data));
+          } else {
+            // fallback to fetch with keepalive
+            fetch(gsUrl, {
+              method: 'POST',
+              mode: 'no-cors',
+              keepalive: true,
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(data)
+            }).catch(() => { /* do not block form */ });
+          }
+        } catch (err) {
+          console.warn('Google Sheets logging failed', err);
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

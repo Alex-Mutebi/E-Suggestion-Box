@@ -1,0 +1,522 @@
+﻿<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>School Suggestion Box</title>
+  <script src="/_sdk/data_sdk.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <style>
+    body {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+      min-height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem 1rem;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0px, transparent 1px, transparent 2px, rgba(255,255,255,0.03) 3px),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0px, transparent 1px, transparent 2px, rgba(255,255,255,0.03) 3px);
+      pointer-events: none;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 680px;
+      background: #ffffff;
+      border-radius: 0;
+      padding: 0;
+      box-shadow: 0 30px 90px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255,255,255,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .accent-bar {
+      height: 8px;
+      background: linear-gradient(90deg, #000000 0%, #404040 50%, #000000 100%);
+    }
+
+    .container-inner {
+      padding: 3.5rem 3rem;
+      background: #ffffff;
+    }
+
+    .header {
+      text-align: left;
+      margin-bottom: 3rem;
+      position: relative;
+      padding-bottom: 2rem;
+    }
+
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background: #000000;
+    }
+
+    .header h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #000000;
+      margin: 0 0 0.75rem 0;
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+    }
+
+    .header p {
+      font-size: 1rem;
+      color: #666666;
+      margin: 0;
+      line-height: 1.6;
+      font-weight: 400;
+    }
+
+    .form-group {
+      margin-bottom: 2rem;
+      position: relative;
+    }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #000000;
+      margin-bottom: 0.7rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .required {
+      color: #000000;
+      font-weight: 700;
+    }
+
+    input[type="text"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 1rem 1.25rem;
+      border: 2px solid #000000;
+      border-radius: 0;
+      font-size: 0.95rem;
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      color: #000000;
+      background: #ffffff;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      font-weight: 500;
+    }
+
+    input[type="text"]:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #000000;
+      background: #fafafa;
+      box-shadow: inset 0 0 0 1px #000000;
+    }
+
+    input[type="text"]::placeholder,
+    textarea::placeholder {
+      color: #999999;
+      font-weight: 400;
+    }
+
+    select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='14' height='9' viewBox='0 0 14 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L7 7L13 1' stroke='%23000000' stroke-width='2.5' stroke-linecap='square'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1.25rem center;
+      padding-right: 3rem;
+    }
+
+    textarea {
+      min-height: 160px;
+      resize: vertical;
+      line-height: 1.7;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 1.25rem;
+      background: #000000;
+      color: #ffffff;
+      border: 3px solid #000000;
+      border-radius: 0;
+      font-size: 0.85rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      letter-spacing: 2px;
+      margin-top: 1.5rem;
+      text-transform: uppercase;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .submit-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .submit-btn:hover:not(:disabled)::before {
+      left: 100%;
+    }
+
+    .submit-btn:hover:not(:disabled) {
+      background: #1a1a1a;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .submit-btn:active:not(:disabled) {
+      transform: translateY(-1px);
+    }
+
+    .submit-btn:disabled {
+      background: #cccccc;
+      border-color: #cccccc;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+
+    .success-message {
+      display: none;
+      background: #000000;
+      color: #ffffff;
+      padding: 1.5rem;
+      border-radius: 0;
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.95rem;
+      animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      border-left: 4px solid #ffffff;
+    }
+
+    .success-message.show {
+      display: block;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .decorative-element {
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(0,0,0,0.03) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    @media (max-width: 640px) {
+      .container-inner {
+        padding: 2.5rem 2rem;
+      }
+
+      .header h1 {
+        font-size: 2rem;
+      }
+
+      .header {
+        margin-bottom: 2.5rem;
+        padding-bottom: 1.5rem;
+      }
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body>
+  <div class="container">
+   <div class="accent-bar"></div>
+   <div class="container-inner">
+    <div class="decorative-element"></div>
+    <div class="header">
+     <h1 id="form-title">School Suggestion Box</h1>
+     <p id="form-subtitle">Your voice matters! Share your ideas to help improve our school community.</p>
+    </div>
+    <form id="suggestion-form">
+     <div class="form-group"><label for="submitter-type">I am a <span class="required">*</span></label> <select id="submitter-type" required> <option value="">Select an option</option> <option value="student">Student</option> <option value="parent">Parent/Guardian</option> <option value="teacher">Teacher</option> <option value="staff">Staff Member</option> </select>
+     </div>
+     <div class="form-group" id="grade-group" style="display: none;"><label for="grade-level">Grade Level <span class="required">*</span></label> <select id="grade-level"> <option value="">Select grade</option> <option value="k">Kindergarten</option> <option value="1">1st Grade</option> <option value="2">2nd Grade</option> <option value="3">3rd Grade</option> <option value="4">4th Grade</option> <option value="5">5th Grade</option> <option value="6">6th Grade</option> <option value="7">7th Grade</option> <option value="8">8th Grade</option> <option value="9">9th Grade</option> <option value="10">10th Grade</option> <option value="11">11th Grade</option> <option value="12">12th Grade</option> </select>
+     </div>
+     <div class="form-group"><label for="category">Suggestion Category <span class="required">*</span></label> <select id="category" required> <option value="">Select a category</option> <option value="academics">Academics &amp; Curriculum</option> <option value="facilities">Facilities &amp; Campus</option> <option value="extracurricular">Clubs &amp; Activities</option> <option value="cafeteria">Cafeteria &amp; Food Services</option> <option value="sports">Sports &amp; Athletics</option> <option value="technology">Technology &amp; Resources</option> <option value="events">School Events</option> <option value="safety">Safety &amp; Wellbeing</option> <option value="other">Other</option> </select>
+     </div>
+     <div class="form-group"><label for="subject">Subject Line <span class="required">*</span></label> <input type="text" id="subject" placeholder="Brief summary of your suggestion" required maxlength="100">
+     </div>
+     <div class="form-group"><label for="suggestion">Your Suggestion <span class="required">*</span></label> <textarea id="suggestion" placeholder="Please share your ideas, feedback, or suggestions in detail..." required maxlength="1000"></textarea>
+     </div><button type="submit" class="submit-btn" id="submit-btn"> <span id="submit-text">Submit Suggestion</span> </button>
+    </form>
+    <div class="success-message" id="success-message">
+     ✓ <span id="success-text">Thank you! Your suggestion has been submitted successfully.</span>
+    </div>
+   </div>
+  </div>
+  <script>
+    const defaultConfig = {
+      background_color: '#000000',
+      surface_color: '#ffffff',
+      text_color: '#000000',
+      primary_action_color: '#000000',
+      secondary_text_color: '#666666',
+      font_family: 'Inter',
+      font_size: 16,
+      form_title: 'School Suggestion Box',
+      form_subtitle: 'Your voice matters! Share your ideas to help improve our school community.',
+      submit_button_text: 'Submit Suggestion',
+      success_message: 'Thank you! Your suggestion has been submitted successfully.'
+    };
+
+    const dataHandler = {
+      onDataChanged(data) {
+        // This is a write-only form, no need to display previous submissions
+      }
+    };
+
+    async function initializeApp() {
+      if (window.dataSdk) {
+        const initResult = await window.dataSdk.init(dataHandler);
+        if (!initResult.isOk) {
+          console.error('Failed to initialize Data SDK');
+        }
+      }
+
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange: async (config) => {
+            const customFont = config.font_family || defaultConfig.font_family;
+            const baseFontStack = "'Segoe UI', system-ui, sans-serif";
+            const baseSize = config.font_size || defaultConfig.font_size;
+
+            const bgColor = config.background_color || defaultConfig.background_color;
+            document.body.style.background = `linear-gradient(135deg, ${bgColor} 0%, ${bgColor}dd 100%)`;
+            
+            const container = document.querySelector('.container');
+            container.style.background = config.surface_color || defaultConfig.surface_color;
+            container.style.fontFamily = `${customFont}, ${baseFontStack}`;
+
+            const titleElement = document.getElementById('form-title');
+            titleElement.textContent = config.form_title || defaultConfig.form_title;
+            titleElement.style.color = config.text_color || defaultConfig.text_color;
+            titleElement.style.fontSize = `${baseSize * 2}px`;
+            titleElement.style.fontFamily = `${customFont}, ${baseFontStack}`;
+
+            const subtitleElement = document.getElementById('form-subtitle');
+            subtitleElement.textContent = config.form_subtitle || defaultConfig.form_subtitle;
+            subtitleElement.style.color = config.secondary_text_color || defaultConfig.secondary_text_color;
+            subtitleElement.style.fontSize = `${baseSize * 0.95}px`;
+            subtitleElement.style.fontFamily = `${customFont}, ${baseFontStack}`;
+
+            const labels = document.querySelectorAll('label');
+            labels.forEach(label => {
+              label.style.color = config.text_color || defaultConfig.text_color;
+              label.style.fontSize = `${baseSize * 0.9}px`;
+              label.style.fontFamily = `${customFont}, ${baseFontStack}`;
+            });
+
+            const inputs = document.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+              input.style.color = config.text_color || defaultConfig.text_color;
+              input.style.fontSize = `${baseSize * 0.95}px`;
+              input.style.fontFamily = `${customFont}, ${baseFontStack}`;
+            });
+
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.style.background = config.primary_action_color || defaultConfig.primary_action_color;
+            submitBtn.style.fontSize = `${baseSize}px`;
+            submitBtn.style.fontFamily = `${customFont}, ${baseFontStack}`;
+
+            const submitTextElement = document.getElementById('submit-text');
+            submitTextElement.textContent = config.submit_button_text || defaultConfig.submit_button_text;
+
+            const successTextElement = document.getElementById('success-text');
+            successTextElement.textContent = config.success_message || defaultConfig.success_message;
+
+            const successMessage = document.getElementById('success-message');
+            successMessage.style.background = config.primary_action_color || defaultConfig.primary_action_color;
+            successMessage.style.fontSize = `${baseSize * 0.95}px`;
+            successMessage.style.fontFamily = `${customFont}, ${baseFontStack}`;
+
+            const borderColor = config.text_color || defaultConfig.text_color;
+            const topBorder = container.querySelector('::before');
+            container.style.setProperty('--border-color', borderColor);
+          },
+          mapToCapabilities: (config) => ({
+            recolorables: [
+              {
+                get: () => config.background_color || defaultConfig.background_color,
+                set: (value) => {
+                  if (window.elementSdk && window.elementSdk.config) {
+                    window.elementSdk.config.background_color = value;
+                    window.elementSdk.setConfig({ background_color: value });
+                  }
+                }
+              },
+              {
+                get: () => config.surface_color || defaultConfig.surface_color,
+                set: (value) => {
+                  if (window.elementSdk && window.elementSdk.config) {
+                    window.elementSdk.config.surface_color = value;
+                    window.elementSdk.setConfig({ surface_color: value });
+                  }
+                }
+              },
+              {
+                get: () => config.text_color || defaultConfig.text_color,
+                set: (value) => {
+                  if (window.elementSdk && window.elementSdk.config) {
+                    window.elementSdk.config.text_color = value;
+                    window.elementSdk.setConfig({ text_color: value });
+                  }
+                }
+              },
+              {
+                get: () => config.primary_action_color || defaultConfig.primary_action_color,
+                set: (value) => {
+                  if (window.elementSdk && window.elementSdk.config) {
+                    window.elementSdk.config.primary_action_color = value;
+                    window.elementSdk.setConfig({ primary_action_color: value });
+                  }
+                }
+              },
+              {
+                get: () => config.secondary_text_color || defaultConfig.secondary_text_color,
+                set: (value) => {
+                  if (window.elementSdk && window.elementSdk.config) {
+                    window.elementSdk.config.secondary_text_color = value;
+                    window.elementSdk.setConfig({ secondary_text_color: value });
+                  }
+                }
+              }
+            ],
+            borderables: [],
+            fontEditable: {
+              get: () => config.font_family || defaultConfig.font_family,
+              set: (value) => {
+                if (window.elementSdk && window.elementSdk.config) {
+                  window.elementSdk.config.font_family = value;
+                  window.elementSdk.setConfig({ font_family: value });
+                }
+              }
+            },
+            fontSizeable: {
+              get: () => config.font_size || defaultConfig.font_size,
+              set: (value) => {
+                if (window.elementSdk && window.elementSdk.config) {
+                  window.elementSdk.config.font_size = value;
+                  window.elementSdk.setConfig({ font_size: value });
+                }
+              }
+            }
+          }),
+          mapToEditPanelValues: (config) => new Map([
+            ['form_title', config.form_title || defaultConfig.form_title],
+            ['form_subtitle', config.form_subtitle || defaultConfig.form_subtitle],
+            ['submit_button_text', config.submit_button_text || defaultConfig.submit_button_text],
+            ['success_message', config.success_message || defaultConfig.success_message]
+          ])
+        });
+      }
+    }
+
+    initializeApp();
+
+    const submitterTypeSelect = document.getElementById('submitter-type');
+    const gradeGroup = document.getElementById('grade-group');
+    const gradeSelect = document.getElementById('grade-level');
+
+    submitterTypeSelect.addEventListener('change', (e) => {
+      if (e.target.value === 'student') {
+        gradeGroup.style.display = 'block';
+        gradeSelect.required = true;
+      } else {
+        gradeGroup.style.display = 'none';
+        gradeSelect.required = false;
+        gradeSelect.value = '';
+      }
+    });
+
+    const form = document.getElementById('suggestion-form');
+    const submitBtn = document.getElementById('submit-btn');
+    const successMessage = document.getElementById('success-message');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      submitBtn.disabled = true;
+      document.getElementById('submit-text').textContent = 'Submitting...';
+
+      const formData = {
+        id: `suggestion-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        submitter_type: document.getElementById('submitter-type').value,
+        grade_level: document.getElementById('grade-level').value || 'N/A',
+        category: document.getElementById('category').value,
+        subject: document.getElementById('subject').value,
+        suggestion: document.getElementById('suggestion').value,
+        submitted_at: new Date().toISOString()
+      };
+
+      if (window.dataSdk) {
+        const result = await window.dataSdk.create(formData);
+
+        if (result.isOk) {
+          form.reset();
+          gradeGroup.style.display = 'none';
+          successMessage.classList.add('show');
+
+          setTimeout(() => {
+            successMessage.classList.remove('show');
+          }, 5000);
+        } else {
+          alert('There was an error submitting your suggestion. Please try again.');
+        }
+      }
+
+      submitBtn.disabled = false;
+      const config = window.elementSdk?.config || defaultConfig;
+      document.getElementById('submit-text').textContent = config.submit_button_text || defaultConfig.submit_button_text;
+    });
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a278729f1a67939',t:'MTc2MzgwNTA4My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c
